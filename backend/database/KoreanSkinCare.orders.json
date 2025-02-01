@@ -1,0 +1,30 @@
+[{
+  "_id": {
+    "$oid": "679df4ebd1dad8d344564527"
+  },
+  "order_id": 1,
+  "oder_status": "on",
+  "order_data": {
+    "$date": "2025-02-01T10:18:19.354Z"
+  },
+  "delivery_date": {
+    "$date": "2025-02-01T10:18:19.354Z"
+  },
+  "delivery_location": "dhaka",
+  "items": [
+    {
+      "product_id": 1,
+      "quantity": 1,
+      "price": 20,
+      "discount": 0.1
+    },
+    {
+      "product_id": 2,
+      "quantity": 1,
+      "price": 17,
+      "discount": 0.15
+    }
+  ],
+  "deliver_status": "delivered",
+  "total_price": 32.45
+}]

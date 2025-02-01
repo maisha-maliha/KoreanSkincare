@@ -5,7 +5,7 @@ CREATE TABLE userInfo (
     user_name VARCHAR(255),
     full_name VARCHAR(255),
     user_email VARCHAR(255),
-    user_passoword VARCHAR(255),
+    user_password VARCHAR(255),
     PRIMARY KEY (user_id)
 );
 
@@ -32,6 +32,4 @@ SELECT * FROM userInfo;
 SELECT * FROM productsInfo;
 
 
--- update 
--- ALTER TABLE userInfo
--- CHANGE COLUMN user_passoword user_password VARCHAR(255);
+
