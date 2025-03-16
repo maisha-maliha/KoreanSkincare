@@ -2,7 +2,9 @@
 This backend is of version-1.0.
 
 ## Setup
-You must setup environment.
+First set your path to `scr` directory
+`cd src`
+Now you must setup environment.
 `python -m venv .env`
 then you start the environtment
 `.\env\Scripts\activate.bat` (remember this is for windows CMD terminal.)

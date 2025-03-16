@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 
+
 class Filter(BaseModel):
-    skin: list[str] = None
-    concern: list[str] = None
-    product: list[str] = None
+    skin: list[int] = []
+    concern: list[int] = []
+    productType: list[int] = []
+    offset: int = 0
+    limit: int = 0
