@@ -18,36 +18,37 @@ INSERT INTO brands (brandName, country, visibility) VALUES
 ('Some By Mi', 'South Korea', 1),
 ('Isntree', 'South Korea', 1);
 
-INSERT INTO Products (productName, brandId, price, discount, visibility) VALUES
+INSERT INTO Products (productName, details, brandId, price, discount, visibility) VALUES
 -- Beauty of Joseon
-('Glow Serum: Propolis + Niacinamide', 1, 18, 10, 1),
-('Relief Sun: Rice + Probiotics SPF50+', 1, 20, 5, 1),
-('Dynasty Cream', 1, 25, 0, 1),
+('Glow Serum: Propolis + Niacinamide', 'A lightweight serum infused with propolis and niacinamide to brighten and hydrate skin.', 1, 18, 10, 1),
+('Relief Sun: Rice + Probiotics SPF50+', 'A lightweight, non-greasy sunscreen with rice extract and probiotics for UV protection and hydration.', 1, 20, 5, 1),
+('Dynasty Cream', 'A rich yet non-greasy moisturizer with rice bran water and ginseng extract for deep hydration.', 1, 25, 0, 1),
 
 -- Numbuzin
-('No.3 Skin Softening Serum', 2, 22, 8, 1),
-('No.5 Vitamin Concentrated Serum', 2, 24, 12, 1),
-('No.3 Super Glowing Essence Toner', 2, 21, 7, 1),
+('No.3 Skin Softening Serum', 'A nourishing serum that improves skin texture and hydration with niacinamide and fermented ingredients.', 2, 22, 8, 1),
+('No.5 Vitamin Concentrated Serum', 'A brightening serum packed with vitamins to enhance radiance and even out skin tone.', 2, 24, 12, 1),
+('No.3 Super Glowing Essence Toner', 'A hydrating toner with fermented extracts and panthenol to boost skin’s glow.', 2, 21, 7, 1),
 
 -- Klairs
-('Supple Preparation Facial Toner', 3, 21, 5, 1),
-('Freshly Juiced Vitamin Drop', 3, 23, 10, 1),
-('Midnight Blue Calming Cream', 3, 27, 0, 1),
+('Supple Preparation Facial Toner', 'A gentle hydrating toner with amino acids that soothe and balance the skin.', 3, 21, 5, 1),
+('Freshly Juiced Vitamin Drop', 'A vitamin C serum designed to brighten skin and reduce the appearance of dark spots.', 3, 23, 10, 1),
+('Midnight Blue Calming Cream', 'A soothing cream with centella asiatica and guaiazulene for calming sensitive skin.', 3, 27, 0, 1),
 
 -- COSRX
-('Pure Fit Cica Cleansing Oil', 4, 25, 5, 1),
-('Low pH Good Morning Gel Cleanser', 4, 12, 10, 1),
-('One Step Original Clear Pad', 4, 22, 8, 1),
+('Pure Fit Cica Cleansing Oil', 'A gentle cleansing oil with cica extract to remove makeup and impurities without irritation.', 4, 25, 5, 1),
+('Low pH Good Morning Gel Cleanser', 'A mild gel cleanser with tea tree oil and BHA for gentle exfoliation and fresh skin.', 4, 12, 10, 1),
+('One Step Original Clear Pad', 'Exfoliating toner pads infused with betaine salicylate to unclog pores and prevent breakouts.', 4, 22, 8, 1),
 
 -- Some By Mi
-('Bye Bye Blackhead 30 Days Miracle Green Tea Tox', 5, 24, 7, 1),
-('AHA BHA PHA 30 Days Miracle Acne Clear Foam', 5, 15, 10, 1),
-('AHA BHA PHA 30 Days Miracle Toner Pad', 5, 23, 5, 1),
+('Bye Bye Blackhead 30 Days Miracle Green Tea Tox', 'A gentle foaming cleanser with green tea and BHA to remove blackheads and impurities.', 5, 24, 7, 1),
+('AHA BHA PHA 30 Days Miracle Acne Clear Foam', 'A multi-acid cleanser that exfoliates and soothes acne-prone skin.', 5, 15, 10, 1),
+('AHA BHA PHA 30 Days Miracle Toner Pad', 'Pre-soaked toner pads with AHA, BHA, and PHA for gentle exfoliation and acne care.', 5, 23, 5, 1),
 
 -- Isntree
-('Mugwort Calming Cleansing Oil', 6, 28, 5, 1),
-('Green Tea Fresh Cleanser', 6, 18, 8, 1),
-('Chestnut BHA 2% Clear Toner Pad', 6, 20, 6, 1);
+('Mugwort Calming Cleansing Oil', 'A soothing cleansing oil with mugwort extract to remove impurities while calming sensitive skin.', 6, 28, 5, 1),
+('Green Tea Fresh Cleanser', 'A refreshing gel cleanser with green tea extract that controls excess oil and soothes skin.', 6, 18, 8, 1),
+('Chestnut BHA 2% Clear Toner Pad', 'Toner pads infused with chestnut shell extract and BHA for gentle exfoliation and clear skin.', 6, 20, 6, 1);
+
 
 INSERT INTO productType (typeName) VALUES
 ('Serum'),
@@ -91,6 +92,144 @@ INSERT INTO ingredients (ingredientName) VALUES
 ('BHA'),
 ('PHA'),
 ('Rice Extract');
+
+INSERT INTO productIngredients (productId, ingredientId) VALUES
+-- Beauty of Joseon
+(1, 5),  -- Propolis
+(1, 1),  -- Niacinamide
+(2, 10), -- Rice Extract
+(3, 2),  -- Hyaluronic Acid
+
+-- Numbuzin
+(4, 1),  -- Niacinamide
+(4, 2),  -- Hyaluronic Acid
+(5, 6),  -- Vitamin C
+(6, 2),  -- Hyaluronic Acid
+
+-- Klairs
+(7, 2),  -- Hyaluronic Acid
+(8, 6),  -- Vitamin C
+(9, 3),  -- Centella Asiatica
+
+-- COSRX
+(10, 3), -- Centella Asiatica
+(11, 7), -- AHA
+(11, 8), -- BHA
+(12, 8), -- BHA
+
+-- Some By Mi
+(13, 4), -- Green Tea
+(14, 7), -- AHA
+(14, 8), -- BHA
+(14, 9), -- PHA
+(15, 9), -- PHA
+
+-- Isntree
+(16, 3), -- Centella Asiatica
+(17, 4), -- Green Tea
+(18, 8); -- BHA
+
+INSERT INTO productSkin (productId, skintId) VALUES
+-- Beauty of Joseon
+(1, 3), -- Combination
+(1, 5), -- Normal
+(2, 2), -- Dry
+(3, 4), -- Sensitive
+
+-- Numbuzin
+(4, 3), -- Combination
+(4, 5), -- Normal
+(5, 2), -- Dry
+(6, 4), -- Sensitive
+
+-- Klairs
+(7, 1), -- Oily
+(7, 3), -- Combination
+(8, 5), -- Normal
+(9, 4), -- Sensitive
+
+-- COSRX
+(10, 4), -- Sensitive
+(11, 1), -- Oily
+(12, 1), -- Oily
+(12, 3), -- Combination
+
+-- Some By Mi
+(13, 1), -- Oily
+(13, 3), -- Combination
+(14, 1), -- Oily
+(14, 3), -- Combination
+(15, 4), -- Sensitive
+
+-- Isntree
+(16, 4), -- Sensitive
+(17, 1), -- Oily
+(17, 3), -- Combination
+(18, 1); -- Oily;
+
+INSERT INTO productConcerns (productId, concernId) VALUES
+-- Beauty of Joseon
+(1, 6),  -- Hyperpigmentation
+(2, 11), -- Sunburn
+(3, 3),  -- Dryness
+
+-- Numbuzin
+(4, 6),  -- Hyperpigmentation
+(5, 2),  -- Wrinkles
+(6, 3),  -- Dryness
+
+-- Klairs
+(7, 3),  -- Dryness
+(8, 6),  -- Hyperpigmentation
+(9, 5),  -- Redness
+
+-- COSRX
+(10, 5), -- Redness
+(11, 1), -- Acne
+(12, 1), -- Acne
+
+-- Some By Mi
+(13, 1), -- Acne
+(14, 1), -- Acne
+(15, 1), -- Acne
+
+-- Isntree
+(16, 5), -- Redness
+(17, 1), -- Acne
+(18, 1); -- Acne
+
+INSERT INTO productProductType (productId, productTypetId) VALUES
+-- Beauty of Joseon
+(1, 1), -- Glow Serum -> Serum
+(2, 2), -- Relief Sun -> Sunscreen
+(3, 3), -- Dynasty Cream -> Moisturizer
+
+-- Numbuzin
+(4, 1), -- No.3 Skin Softening Serum -> Serum
+(5, 1), -- No.5 Vitamin Concentrated Serum -> Serum
+(6, 6), -- No.3 Super Glowing Essence Toner -> Toner Pad
+
+-- Klairs
+(7, 6), -- Supple Preparation Facial Toner -> Toner Pad
+(8, 1), -- Freshly Juiced Vitamin Drop -> Serum
+(9, 3), -- Midnight Blue Calming Cream -> Moisturizer
+
+-- COSRX
+(10, 4), -- Pure Fit Cica Cleansing Oil -> Cleansing Oil
+(11, 5), -- Low pH Good Morning Gel Cleanser -> Foam Cleanser
+(12, 6), -- One Step Original Clear Pad -> Toner Pad
+
+-- Some By Mi
+(13, 4), -- Bye Bye Blackhead Green Tea Tox -> Cleansing Oil
+(14, 5), -- AHA BHA PHA Miracle Acne Clear Foam -> Foam Cleanser
+(15, 6), -- AHA BHA PHA Miracle Toner Pad -> Toner Pad
+
+-- Isntree
+(16, 4), -- Mugwort Calming Cleansing Oil -> Cleansing Oil
+(17, 5), -- Green Tea Fresh Cleanser -> Foam Cleanser
+(18, 6); -- Chestnut BHA 2% Clear Toner Pad -> Toner Pad
+
+
 
 INSERT INTO inventory (productId, quantity) VALUES
 (1, 100),
@@ -158,6 +297,8 @@ products.visibility as productVisibility
 FROM products 
 INNER JOIN brands ON products.brandId = brands.brandId 
 WHERE brands.visibility = 1;
+
+SELECT * FROM products WHERE productId IN (1,14,15,16);
 
 
 -- ALTER TABLE users DROP COLUMN phone;

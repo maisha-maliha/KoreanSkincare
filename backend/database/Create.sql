@@ -1,15 +1,18 @@
 -- CREATE DATABASE
 CREATE DATABASE KoreanSkinCare;
 USE KoreanSkinCare;
-
+DROP TABLE Products;
 -- PRODUCT TABEL
 CREATE TABLE Products(
 	productId INT NOT NULL AUTO_INCREMENT,
     productName VARCHAR(100),
+    details VARCHAR(225),
     brandId INT,
     price INT,
     discount INT,
     visibility INT,
+    averageRating FLOAT,
+    totalRating INT,
 PRIMARY KEY (productId)
 );
 
@@ -17,7 +20,6 @@ PRIMARY KEY (productId)
 CREATE TABLE brands(
 	brandId INT AUTO_INCREMENT NOT NULL,
     brandName VARCHAR(80),
-    country VARCHAR(50),
     visibility INT,
     PRIMARY KEY (brandId)
 );
@@ -60,6 +62,27 @@ CREATE TABLE reviews(
 	reviewDetails VARCHAR(255),
     PRIMARY KEY (reviewId)
 );
+
+CREATE TABLE productIngredients(
+	productId INT NOT NULL,
+    ingredientId INT NOT NULL
+);
+
+CREATE TABLE productSkin(
+	productId INT NOT NULL,
+    skinId INT NOT NULL
+);
+
+CREATE TABLE productConcerns(
+	productId INT NOT NULL,
+    concernId INT NOT NULL
+);
+
+CREATE TABLE productProductType(
+	productId INT NOT NULL,
+    productTypeId INT NOT NULL
+);
+
 
 -- USERS TABLE
 CREATE TABLE users(

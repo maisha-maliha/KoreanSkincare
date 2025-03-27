@@ -14,10 +14,12 @@ def mysql_database_connection(func):
         try:
             conn = db.connect(**database_config)
             cursor = conn.cursor()
+            print("database connection ===========")
             return func(*args, **kwargs, database=conn, cursor=cursor)
         except db.Error as err:
             print("database connection error: ", err)
         finally:
+            print("database closing ==============")
             cursor.close()
             conn.close()
         return None

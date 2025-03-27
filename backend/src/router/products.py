@@ -1,8 +1,13 @@
 from fastapi import APIRouter, Path, Query
 from typing import Annotated
 from schemas import Filter
+from controller import (
+    controller_products,
+    controller_product_details,
+    controller_product_review,
+    controller_product_brands,
+)
 
-from controller import product, products_filtered
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -11,42 +16,24 @@ router = APIRouter(prefix="/products", tags=["Products"])
 
 
 @router.get("/")
-async def products(filter: Annotated[Filter, Query()]):
-    """get all products"""
-    return products_filtered(filter)
+def products(filter: Annotated[Filter, Query()]):
+    """get all products with any filter"""
+    return controller_products(filter)
+
+
+@router.get("/brands")
+def brands():
+    """get list of all brands"""
+    return controller_product_brands()
 
 
 @router.get("/{id}")
-async def product_id(id: Annotated[int, Path()]):
+def product_id(id: Annotated[int, Path()]):
     """get a certain product information"""
-    return product(id)
+    return controller_product_details(id)
 
 
 @router.get("/{product_id}/reviews-ratings")
-async def product_review_rating():
+def product_review_rating(product_id: int):
     """get all reviews and ratings of a certain product"""
-    pass
-
-
-@router.get("/onsale")
-async def products_onsale():
-    """get all products that has discount"""
-    pass
-
-
-@router.get("/new")
-async def products_new():
-    """get the latest added products"""
-    pass
-
-
-@router.get("/brands}")
-async def brands():
-    """get list of all brands"""
-    pass
-
-
-@router.get("/brands/{brand_id}")
-async def brand_id():
-    """get all products of a brand"""
-    pass
+    return controller_product_review(product_id)

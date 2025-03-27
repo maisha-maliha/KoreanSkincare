@@ -1,12 +1,24 @@
-from models import product, filtered_products
+from models import (
+    model_products,
+    model_product_details,
+    model_product_reviews,
+    model_product_brands,
+)
 from schemas import Filter
+from typing import Annotated
 
 
-def product_id(id):
-    result = product(id)
-    return result
+def controller_products(filter: Filter):
+    return model_products(filter)
 
 
-def products_filtered(data: Filter):
-    result = filtered_products(data)
-    return result
+def controller_product_details(id: int):
+    return model_product_details(id)
+
+
+def controller_product_review(id: int):
+    return model_product_reviews(id)
+
+
+def controller_product_brands():
+    return model_product_brands()
