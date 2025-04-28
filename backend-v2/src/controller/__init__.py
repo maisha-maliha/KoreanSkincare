@@ -4,3 +4,4 @@ from .get.products import (
     controller_product_review,
     controller_product_brands,
 )
+from .get.user import controller_user

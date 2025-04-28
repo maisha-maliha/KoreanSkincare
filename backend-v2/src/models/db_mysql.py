@@ -1,5 +1,15 @@
 import mysql.connector as db
-from models.config import USER, PASSWORD, DATABASE, HOST
+import os
+from dotenv import load_dotenv
+
+# laoding all .env data
+load_dotenv()
+
+USER = os.getenv("USER")
+PASSWORD = os.getenv("PASSWORD")
+DATABASE = os.getenv("DATABASE")
+HOST = os.getenv("HOST")
+
 
 database_config = {
     "user": USER,
