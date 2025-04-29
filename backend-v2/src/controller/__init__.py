@@ -8,4 +8,9 @@ from .get.products import (
     controller_product_types,
 )
 
-# from .get.user import controller_user
+from .get.user import (
+    controller_user,
+    controller_user_order,
+    controller_user_order_details,
+    controller_user_review,
+)

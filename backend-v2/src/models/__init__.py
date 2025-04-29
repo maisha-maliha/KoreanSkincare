@@ -7,4 +7,9 @@ from .products.get_products import (
     product_skin_types as model_product_skin_types,
     product_types as model_product_types,
 )
-from .users.get_user import user as model_user
+from .users.get_user import (
+    user as model_user,
+    user_orders as model_user_order,
+    user_reviews as model_user_review,
+    user_order_details as model_user_order_details,
+)

@@ -19,3 +19,4 @@ from .database_models import (
 )
 from .product import Products, ProductDetails, ProductReviews, Brand
 from .filter import Filter
+from .user import User, UserOrder, UserOrderDetails, UserReview, OrderedProduct
