@@ -7,7 +7,7 @@ class Products(BaseModel):
     brandName: str
     price: int
     discount: int
-    productVisibility: int
+    visibility: int
     averageRating: float
     totalRating: int
 
@@ -19,14 +19,14 @@ class ProductDetails(BaseModel):
     brandName: str
     price: int
     discount: int
-    productVisibility: int
+    visibility: int
     averageRating: float
     totalRating: int
     details: str
-    skin: list[list]
-    concern: list[list]
-    productType: list[list]
-    ingredients: list[list]
+    skin: list[dict]
+    concern: list[dict]
+    productType: list[dict]
+    ingredients: list[dict]
 
 
 class ProductReviews(BaseModel):

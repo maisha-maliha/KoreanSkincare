@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from controller import controller_user
+
+# from controller import controller_user
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -7,9 +8,9 @@ router = APIRouter(prefix="/users", tags=["Users"])
 # ============ GET ===============
 
 
-@router.get("/{user_id}")
-async def user(user_id: int):
-    return controller_user(user_id)
+# @router.get("/{user_id}")
+# async def user(user_id: int):
+#     return controller_user(user_id)
 
 
 @router.get("/{user_id}/orders")

@@ -11,9 +11,7 @@ class DB_Admins(SQLModel, table=True):
 
     adminId: int | None = Field(default=None, primary_key=True)
     adminName: str = Field(sa_column=String(50))
-    email: EmailStr = Field(
-        sa_column=String(50), sa_column_kwargs={"nullable": False, "unique": True}
-    )
+    email: EmailStr = Field(sa_column=String(50))
     adminPassword: str = Field(sa_column=String(120))
     adminRole: str = Field(sa_column=String(30))
 
@@ -25,6 +23,7 @@ class DB_Brands(SQLModel, table=True):
 
     brandId: int | None = Field(default=None, primary_key=True)
     brandName: str = Field(sa_column=String(80))
+    country: str = Field(sa_column=String(50))
     visibility: int
 
 
@@ -102,9 +101,7 @@ class DB_Users(SQLModel, table=True):
     createdTime: datetime
     userName: str = Field(sa_column=String(50))
     address: str = Field(sa_column=String(120))
-    email: EmailStr = Field(
-        sa_column=String(50), sa_column_kwargs={"nullable": False, "unique": True}
-    )
+    email: EmailStr = Field(sa_column=String(50))
     phone: str = Field(sa_column=String(20))
     age: date
     userPassword: str = Field(sa_column=String(120))
@@ -140,7 +137,8 @@ class DB_Orders(SQLModel, table=True):
 class DB_SoldProducts(SQLModel, table=True):
     __tablename__ = "soldproducts"
 
-    orderId: int
+    id: int | None = Field(default=None, primary_key=True)
+    orderId: int = Field(primary_key=False)
     productId: int
     quantity: int
     perCost: int
@@ -162,8 +160,8 @@ class DB_PaymentMethods(SQLModel, table=True):
 class DB_ProductIngredients(SQLModel, table=True):
     __tablename__ = "productingredients"
 
-    productId: int
-    ingredientId: int
+    productId: int = Field(primary_key=True)
+    ingredientId: int = Field(primary_key=True)
 
 
 # ------------------------------
@@ -171,8 +169,8 @@ class DB_ProductIngredients(SQLModel, table=True):
 class DB_ProductSkin(SQLModel, table=True):
     __tablename__ = "productskin"
 
-    productId: int
-    skinId: int
+    productId: int = Field(primary_key=True)
+    skinId: int = Field(primary_key=True)
 
 
 # ------------------------------
@@ -180,8 +178,8 @@ class DB_ProductSkin(SQLModel, table=True):
 class DB_ProductConcerns(SQLModel, table=True):
     __tablename__ = "productconcerns"
 
-    productId: int
-    concernId: int
+    productId: int = Field(primary_key=True)
+    concernId: int = Field(primary_key=True)
 
 
 # ------------------------------
@@ -189,5 +187,5 @@ class DB_ProductConcerns(SQLModel, table=True):
 class DB_ProductProductType(SQLModel, table=True):
     __tablename__ = "productproducttype"
 
-    productId: int
-    productTypeId: int
+    productId: int = Field(primary_key=True)
+    productTypeId: int = Field(primary_key=True)

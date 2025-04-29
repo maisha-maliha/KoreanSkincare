@@ -6,6 +6,9 @@ from controller import (
     controller_product_details,
     controller_product_review,
     controller_product_brands,
+    controller_product_skin_types,
+    controller_product_types,
+    controller_product_concerns,
 )
 
 
@@ -25,6 +28,24 @@ def products(filter: Annotated[Filter, Query()]):
 def brands():
     """get list of all brands"""
     return controller_product_brands()
+
+
+@router.get("/skintypes")
+def skin_types():
+    """get all skin types"""
+    return controller_product_skin_types()
+
+
+@router.get("/prodcuttypes")
+def product_types():
+    """get all products types"""
+    return controller_product_types()
+
+
+@router.get("/concerns")
+def concern_types():
+    """skin concern types"""
+    return controller_product_concerns()
 
 
 @router.get("/{id}")

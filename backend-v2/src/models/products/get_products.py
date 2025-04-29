@@ -1,196 +1,225 @@
-from models.db_mysql import mysql_database_connection
+from sqlmodel import select
+from models.db_mysql import mysql_database_connection, mysql_sqlmodel
 from schemas import Products, Filter, ProductDetails, ProductReviews, Brand
+from schemas import (
+    DB_Admins,
+    DB_Brands,
+    DB_Concerns,
+    DB_Ingredients,
+    DB_Orders,
+    DB_Inventory,
+    DB_PaymentMethods,
+    DB_ProductConcerns,
+    DB_ProductIngredients,
+    DB_ProductProductType,
+    DB_Products,
+    DB_ProductSkin,
+    DB_ProductType,
+    DB_Reviews,
+    DB_Skin,
+    DB_SoldProducts,
+    DB_Users,
+)
 
 
-@mysql_database_connection
-def products(filter: Filter, database, cursor) -> list[Products]:
-    query_selectors = """
-    SELECT 
-    products.productId, 
-    products.productName, 
-    brands.brandName, 
-    products.price, 
-    products.discount, 
-    products.visibility, 
-    products .averageRating,
-    products.totalRating 
-    """
-    query_joins = """
-    FROM products
-    INNER JOIN brands 
-    ON products.brandId = brands.brandId
-    """
-    query_condition = """
-    WHERE brands.visibility = 1
-    """
-    # ==== ALL CONDITIONS ========
+@mysql_sqlmodel
+def all_products(filter: Filter, session) -> list[Products]:
+    query = select(
+        DB_Products.productId,
+        DB_Products.productName,
+        DB_Brands.brandName,
+        DB_Products.price,
+        DB_Products.discount,
+        DB_Products.visibility,
+        DB_Products.averageRating,
+        DB_Products.totalRating,
+    ).join(DB_Brands, DB_Products.brandId == DB_Brands.brandId)
+
     if filter.skin:
-        query_joins += "INNER JOIN productSkin ON products.productId = productSkin.ProductId INNER JOIN skin ON productSkin.skinId = skin.SkinId"
-        skin_ids = ",".join(
-            map(str, filter.skin)
-        )  # Convert list to comma-separated string
-        query_condition += f" AND skin.skinId IN ({skin_ids})"
-
+        query = query.join(
+            DB_ProductSkin, DB_ProductSkin.productId == DB_Products.productId
+        ).where(DB_ProductSkin.skinId.in_(filter.skin))
     if filter.concern:
-        query_joins += "INNER JOIN productConcerns ON products.productId = productConcerns.ProductId INNER JOIN concerns ON productConcerns.concernId = concerns.concernId"
-        concern_ids = ",".join(
-            map(str, filter.concern)
-        )  # Convert list to comma-separated string
-        query_condition += f" AND concerns.concernId IN ({concern_ids})"
-
+        query = query.join(
+            DB_ProductConcerns, DB_ProductConcerns.productId == DB_Products.productId
+        ).where(DB_ProductConcerns.concernId.in_(filter.concern))
     if filter.productType:
-        query_joins += "INNER JOIN productProductType ON products.productId = productProductType.ProductId INNER JOIN productType ON productType.typeId = productProductType.productTypeId"
-        product_type_ids = ",".join(
-            map(str, filter.productType)
-        )  # Convert list to comma-separated string
-        query_condition += f" AND productType.typeId IN ({product_type_ids})"
-
-    if filter.brand:
-        query_condition += f" AND brands.brandId = {filter.brand}"
-
-    if filter.onSale:
-        query_condition += " AND products.discount > 0"
-
-    if filter.limit:
-        query_condition += f" LIMIT {filter.limit}"
-
+        query = query.join(
+            DB_ProductProductType,
+            DB_ProductProductType.productId == DB_Products.productId,
+        ).where(DB_ProductProductType.productTypeId.in_(filter.productType))
     if filter.offset:
-        query_condition += f" OFFSET {filter.offset}"
+        query = query.where(DB_Products.productId >= filter.offset)
+    if filter.limit:
+        query = query.limit(filter.limit)
 
-    # form whole query
-    query = query_selectors + query_joins + query_condition
-    print("\n\n", query, "\n\n")
-    # execute the query
-    cursor.execute(query)
-    # query result return
-    products_list: list[Products] = []
-    # create products list
-    for p in cursor.fetchall():
-        columns = list(Products.model_fields.keys())
-        item_data = dict(zip(columns, p))  # Convert tuple to dictionary
-        item = Products(**item_data)  # Pass as keyword arguments
-        products_list.append(item)
-
-    return products_list
-
-
-@mysql_database_connection
-def product_details(id, database, cursor) -> ProductDetails:
-    query = f"""
-    SELECT products.productId, 
-    products.productName, 
-    products.brandId, 
-    brands.brandName, 
-    products.price,
-    products.discount,
-    products.visibility,
-    products.averageRating,
-    products.totalRating,
-    products.details
-    FROM products
-    INNER JOIN brands ON products.brandId = brands.brandId
-    WHERE products.productId = {id};
-    """
-    cursor.execute(query)
-    row = cursor.fetchone()
-
-    result = list(row)
-    result.append(product_skin_types(id))
-    result.append(product_concerns(id))
-    result.append(product_type(id))
-    result.append(product_ingredients(id))
-
-    columns = list(ProductDetails.model_fields.keys())
-    item_data = dict(zip(columns, result))
-
-    return ProductDetails(**item_data)
-
-
-@mysql_database_connection
-def product_review(id, database, cursor) -> list[ProductReviews]:
-    query = f"""
-    SELECT reviews.reviewId,
-    users.userName,
-    reviews.reviewDetails,
-    reviews.rating
-    FROM reviews
-    INNER JOIN users ON users.userId = reviews.userId
-    WHERE reviews.productId ={id}
-    """
-    cursor.execute(query)
-    result = cursor.fetchall()
-    # query result return
-    reviews_list: list[ProductReviews] = []
-    # create reviews list
+    result = session.exec(query).all()
+    response = []
     for p in result:
-        columns = list(ProductReviews.model_fields.keys())
-        item_data = dict(zip(columns, p))  # Convert tuple to dictionary
-        item = ProductReviews(**item_data)  # Pass as keyword arguments
-        reviews_list.append(item)
-    return reviews_list
+        product_info = {
+            "productId": p[0],
+            "productName": p[1],
+            "brandName": p[2],
+            "price": p[3],
+            "discount": p[4],
+            "visibility": p[5],
+            "averageRating": p[6],
+            "totalRating": p[7],
+        }
+
+        response.append(Products(**product_info))
+
+    return response
 
 
-@mysql_database_connection
-def product_ingredients(id, database, cursor):
-    query = f"""
-    SELECT ingredients.ingredientId, ingredients.ingredientName
-    FROM ingredients
-    INNER JOIN productIngredients ON ingredients.ingredientId = productIngredients.ingredientId
-    WHERE productId = {id}
-    """
-    cursor.execute(query)
-    result = cursor.fetchall()
-    return list(result)
+@mysql_sqlmodel
+def product_details(id, session) -> ProductDetails:
+    product_statement = (
+        select(
+            DB_Products.productId,
+            DB_Products.productName,
+            DB_Brands.brandId,
+            DB_Brands.brandName,
+            DB_Products.price,
+            DB_Products.discount,
+            DB_Products.visibility,
+            DB_Products.averageRating,
+            DB_Products.totalRating,
+            DB_Products.details,
+        )
+        .join(DB_Brands, DB_Products.brandId == DB_Brands.brandId)
+        .where(DB_Products.productId == id)
+    )
+    skin_statement = (
+        select(DB_Skin.skinId, DB_Skin.skinName)
+        .join(DB_ProductSkin, DB_Skin.skinId == DB_ProductSkin.skinId)
+        .where(DB_ProductSkin.productId == id)
+    )
+    concern_statement = (
+        select(DB_Concerns.concernId, DB_Concerns.concern)
+        .join(DB_ProductConcerns, DB_ProductConcerns.concernId == DB_Concerns.concernId)
+        .where(DB_ProductConcerns.productId == id)
+    )
+    ingredient_statement = (
+        select(DB_Ingredients.ingredientId, DB_Ingredients.ingredientName)
+        .join(
+            DB_ProductIngredients,
+            DB_ProductIngredients.ingredientId == DB_Ingredients.ingredientId,
+        )
+        .where(DB_ProductIngredients.productId == id)
+    )
+    type_statment = (
+        select(DB_ProductType.typeId, DB_ProductType.typeName)
+        .join(
+            DB_ProductProductType,
+            DB_ProductType.typeId == DB_ProductProductType.productTypeId,
+        )
+        .where(DB_ProductProductType.productId == id)
+    )
+    product = list(session.exec(product_statement).all()[0])
+    concern = [
+        {"concernId": row.concernId, "concern": row.concern}
+        for row in session.exec(concern_statement).all()
+    ]
+    ingredients = [
+        {"ingredientId": row.ingredientId, "ingredientName": row.ingredientName}
+        for row in session.exec(ingredient_statement).all()
+    ]
+    product_type = [
+        {"ingredientId": row.typeId, "ingredientName": row.typeName}
+        for row in session.exec(type_statment).all()
+    ]
+    skin = [
+        {"skinId": row.skinId, "skinName": row.skinName}
+        for row in session.exec(skin_statement).all()
+    ]
+    result = ProductDetails(
+        productId=product[0],
+        productName=product[1],
+        brandId=product[2],
+        brandName=product[3],
+        price=product[4],
+        discount=product[5],
+        visibility=product[6],
+        averageRating=product[7],
+        totalRating=product[8],
+        details=product[9],
+        skin=list(tuple(skin)),
+        concern=list(tuple(concern)),
+        productType=list(tuple(product_type)),
+        ingredients=list(tuple(ingredients)),
+    )
+
+    return result
 
 
-@mysql_database_connection
-def product_skin_types(id, database, cursor):
-    query = f"""
-    SELECT skin.skinId, skin.skinName
-    FROM Skin
-    INNER JOIN productSkin ON skin.SkinId = productSkin.skinId
-    WHERE productId = {id}
-    """
-    cursor.execute(query)
-    result = cursor.fetchall()
-    return list(result)
+@mysql_sqlmodel
+def product_review(id, session) -> list[ProductReviews]:
+    query = (
+        select(
+            DB_Reviews.reviewId,
+            DB_Users.userName,
+            DB_Reviews.reviewDetails,
+            DB_Reviews.rating,
+        )
+        .join(DB_Users, DB_Reviews.userId == DB_Users.userId)
+        .where(DB_Reviews.productId == id)
+    )
+    result = session.exec(query).all()
+    response = []
+    for review in result:
+        response.append(
+            ProductReviews(
+                reviewId=review[0],
+                username=review[1],
+                review=review[2],
+                ratings=review[3],
+            )
+        )
+
+    return response
 
 
-@mysql_database_connection
-def product_concerns(id, database, cursor):
-    query = f"""
-    SELECT concerns.concernId, concerns.concern
-    FROM concerns
-    INNER JOIN productConcerns ON concerns.concernId = productConcerns.concernId
-    WHERE productId = {id}
-    """
-    cursor.execute(query)
-    result = cursor.fetchall()
-    return list(result)
+@mysql_sqlmodel
+def product_brands(session) -> list[Brand]:
+    query = select(DB_Brands)
+    brands = []
+    for brand in session.exec(query).all():
+        brands.append(
+            Brand(
+                brandId=brand.brandId,
+                brandName=brand.brandName,
+                visibility=brand.visibility,
+            )
+        )
+    return brands
 
 
-@mysql_database_connection
-def product_type(id, database, cursor):
-    query = f"""
-    SELECT productType.typeId, 
-    productType.typeName 
-    FROM productProductType 
-    INNER JOIN productType ON productProductType.productTypeId = productType.typeId
-    WHERE productId = {id}
-    """
-    cursor.execute(query)
-    result = cursor.fetchall()
-    return list(result)
+@mysql_sqlmodel
+def product_skin_types(session) -> list[dict]:
+    query = select(DB_Skin)
+    result = []
+    for s in session.exec(query).all():
+        result.append({"skinId": s.skinId, "skinName": s.skinName})
+
+    return result
 
 
-@mysql_database_connection
-def product_brands(database, cursor) -> list[Brand]:
-    query = "SELECT * FROM brands"
-    cursor.execute(query)
-    result = cursor.fetchall()
-    brands_list: list[Brand] = []
-    for b in result:
-        columns = list(Brand.model_fields.keys())
-        item = dict(zip(columns, [b[0], b[1], b[2]]))
-        brands_list.append(Brand(**item))
-    return brands_list
+@mysql_sqlmodel
+def product_concerns(session):
+    query = select(DB_Concerns)
+    result = []
+    for s in session.exec(query).all():
+        result.append({"concernId": s.concernId, "concern": s.concern})
+
+    return result
+
+
+@mysql_sqlmodel
+def product_types(session):
+    query = select(DB_ProductType)
+    result = []
+    for s in session.exec(query).all():
+        result.append({"typeId": s.typeId, "typeName": s.typeName})
+
+    return result

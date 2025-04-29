@@ -1,16 +1,18 @@
 from models.db_mysql import mysql_database_connection
-from schemas import User
+
+# from schemas import User
 
 
 @mysql_database_connection
-def user(user_id: int, database, cursor) -> User:
-    query = f"SELECT * FROM users WHERE userId = {user_id}"
-    cursor.execute(query)
-    result = list(cursor.fetchone())
-    column = list(User.model_fields.keys())
-    data = dict(zip(column, result))
-    user_data = User(**data)
-    return user_data
+def user(user_id: int, database, cursor):
+    # query = f"SELECT * FROM users WHERE userId = {user_id}"
+    # cursor.execute(query)
+    # result = list(cursor.fetchone())
+    # column = list(User.model_fields.keys())
+    # data = dict(zip(column, result))
+    # user_data = User(**data)
+    # return user_data
+    pass
 
 
 @mysql_database_connection

@@ -20,6 +20,7 @@ PRIMARY KEY (productId)
 CREATE TABLE brands(
 	brandId INT AUTO_INCREMENT NOT NULL,
     brandName VARCHAR(80),
+    country VARCHAR(50),
     visibility INT,
     PRIMARY KEY (brandId)
 );
@@ -128,12 +129,14 @@ CREATE TABLE orders(
 );
 
 CREATE TABLE soldProducts(
+    id INT NOT NULL AUTO_INCREMENT
 	orderId INT,
     productId INT,
     quantity INT,
     perCost INT,
     perDiscount INT, -- discount on per product
     totalCost INT
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE paymentmethods(
